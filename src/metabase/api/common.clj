@@ -287,8 +287,9 @@
 (defannotation Required
   "Param may not be `nil`."
   [symb value]
-  (or value
-      (throw (invalid-param-exception (name symb) "field is a required param."))))
+  (u/prog1 value
+    (when (nil? value)
+      (invalid-param-exception (name symb) "field is a required param."))))
 
 (defannotation Date
   "Parse param string as an [ISO 8601 date](http://en.wikipedia.org/wiki/ISO_8601), e.g.
@@ -340,13 +341,22 @@
   "Param must be an array of integers (this does *not* cast the param)."
   [symb value :nillable]
   (checkp-with vector? symb value "value must be an array.")
-  (mapv (fn [v] (checkp-with integer? symb v "array value must be an integer.")) value))
+  (doseq [v value]
+    (checkp-with integer? symb v "array value must be an integer.")))
+
+(defannotation ArrayOfStrings
+  "Param must be an array of strings (this does *not* cast the param)."
+  [symb value :nillable]
+  (checkp-with vector? symb value "value must be an array.")
+  (doseq [v value]
+    (checkp-with string? symb v "array value must be a string.")))
 
 (defannotation ArrayOfMaps
   "Param must be an array of maps (this does *not* cast the param)."
   [symb value :nillable]
   (checkp-with vector? symb value "value must be an array.")
-  (mapv (fn [v] (checkp-with map? symb v "array value must be a map.")) value))
+  (doseq [v value]
+    (checkp-with map? symb v "array value must be a map.")))
 
 (defannotation NonEmptyString
   "Param must be a non-empty string (strings that only contain whitespace are considered empty)."

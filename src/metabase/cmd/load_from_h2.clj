@@ -14,24 +14,29 @@
                              [dashboard-card :refer [DashboardCard]]
                              [dashboard-card-series :refer [DashboardCardSeries]]
                              [database :refer [Database]]
+                             [database-permissions :refer [DatabasePermissions]]
                              [dependency :refer [Dependency]]
                              [field :refer [Field]]
                              [field-values :refer [FieldValues]]
                              [label :refer [Label]]
                              [metric :refer [Metric]]
                              [metric-important-field :refer [MetricImportantField]]
+                             [permissions-group :refer [PermissionsGroup]]
+                             [permissions-group-membership :refer [PermissionsGroupMembership]]
                              [pulse :refer [Pulse]]
                              [pulse-card :refer [PulseCard]]
                              [pulse-channel :refer [PulseChannel]]
                              [pulse-channel-recipient :refer [PulseChannelRecipient]]
                              [query-execution :refer [QueryExecution]]
-                             [raw-table :refer [RawTable]]
                              [raw-column :refer [RawColumn]]
+                             [raw-table :refer [RawTable]]
                              [revision :refer [Revision]]
+                             [schema-permissions :refer [SchemaPermissions]]
                              [segment :refer [Segment]]
                              [session :refer [Session]]
                              [setting :refer [Setting]]
                              [table :refer [Table]]
+                             [table-permissions :refer [TablePermissions]]
                              [user :refer [User]]
                              [view-log :refer [ViewLog]])
             [metabase.util :as u]))
@@ -67,7 +72,12 @@
    PulseChannel
    PulseChannelRecipient
    Label
-   CardLabel])
+   CardLabel
+   PermissionsGroup
+   PermissionsGroupMembership
+   DatabasePermissions
+   SchemaPermissions
+   TablePermissions])
 
 (def ^:private self-referencing-entities
   "Entities that have a column with and FK that points back to the same table."

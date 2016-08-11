@@ -6,6 +6,7 @@
             (schema [core :as s]
                     utils)
             [swiss.arrows :refer [<<-]]
+            [metabase.api.common :refer [*current-user-id*]]
             (metabase [config :as config]
                       [db :as db]
                       [driver :as driver])
@@ -17,6 +18,7 @@
                                       [interface :refer :all]
                                       [macros :as macros]
                                       [parameters :as params]
+                                      [permissions :as perms]
                                       [resolve :as resolve])
             [metabase.util :as u])
   (:import (schema.utils NamedError ValidationError)))
@@ -420,6 +422,13 @@
                          (update :driver name)))))))
     (qp query)))
 
+(defn- pre-check-query-permissions [qp]
+  (fn [query]
+    (when *current-user-id*
+      (perms/check-query-permissions *current-user-id* query))
+    ;; TODO - what should we do if there is no *current-user-id* (for something like a pulse?)
+    (qp query)))
+
 ;; The following are just assertions that check the behavior of the QP. It doesn't make sense to run them on prod because at best they
 ;; just waste CPU cycles and at worst cause a query to fail when it would otherwise succeed.
 ;; TODO - Should we make these test only (as opposed to test / dev)? If so, it would be nice if they could be moved into test namespaces
@@ -545,6 +554,7 @@
             limit
             post-check-results-format
             pre-log-query
+            pre-check-query-permissions
             guard-multiple-calls
             run-query) (assoc query :driver driver)))))
 

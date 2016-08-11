@@ -24,10 +24,11 @@
     (merge defaults table)))
 
 (defn- pre-cascade-delete [{:keys [id]}]
-  (db/cascade-delete! Segment :table_id id)
-  (db/cascade-delete! Metric :table_id id)
-  (db/cascade-delete! Field :table_id id)
-  (db/cascade-delete! 'Card :table_id id))
+  (db/cascade-delete! Segment           :table_id id)
+  (db/cascade-delete! Metric            :table_id id)
+  (db/cascade-delete! Field             :table_id id)
+  (db/cascade-delete! 'Card             :table_id id)
+  (db/cascade-delete! 'TablePermissions :table_id id))
 
 (defn ^:hydrate fields
   "Return the `FIELDS` belonging to TABLE."
@@ -105,6 +106,7 @@
     (db/update-where! Field {:table_id [:in table-ids]}
       :visibility_type "retired")))
 
+;; TODO - rename to `update-table-from-tabledef!`
 (defn update-table!
   "Update `Table` with the data from TABLE-DEF."
   [{:keys [id display_name], :as existing-table} {table-name :name}]
@@ -118,6 +120,7 @@
     ;; always return the table when we are done
     updated-table))
 
+;; TODO - rename to `create-table-from-tabledef!`
 (defn create-table!
   "Create `Table` with the data from TABLE-DEF."
   [database-id {schema-name :schema, table-name :name, raw-table-id :raw-table-id, visibility-type :visibility-type}]

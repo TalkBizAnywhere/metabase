@@ -544,7 +544,7 @@ CoreServices.factory('Settings', ['$resource', function($resource) {
         list: {
             url: '/api/setting',
             method: 'GET',
-            isArray: true,
+            isArray: true
         },
         // POST endpoint handles create + update in this case
         put: {
@@ -565,6 +565,120 @@ CoreServices.factory('Settings', ['$resource', function($resource) {
             method: 'DELETE',
             params: {
                 key: '@key'
+            }
+        }
+    });
+}]);
+
+CoreServices.factory('Permissions', ['$resource', function($resource) {
+    return $resource('/api/permissions', {}, {
+        groups: {
+            method: 'GET',
+            url: '/api/permissions/groups',
+            isArray: true
+        },
+        groupDetails: {
+            method: 'GET',
+            url: '/api/permissions/group/:id',
+            params: {
+                id: '@id'
+            }
+        },
+        databaseDetails: {
+            method: 'GET',
+            url: '/api/permissions/database/:id',
+            params: {
+                id: '@id'
+            }
+        },
+        databasePermissions: {
+            method: 'GET',
+            url: '/api/permissions/database/:databaseID/group/:groupID',
+            params: {
+                databaseID: '@databaseID',
+                groupID: '@groupID'
+            }
+        },
+        createGroup: {
+            method: 'POST',
+            url: '/api/permissions/group'
+        },
+        createMembership: {
+            method: 'POST',
+            url: '/api/permissions/membership',
+            isArray: true
+        },
+        deleteMembership: {
+            method: 'DELETE',
+            url: '/api/permissions/membership/:id',
+            params: {
+                id: '@id'
+            }
+        },
+        updateDatabasePermissions: {
+            method: 'POST',
+            url: '/api/permissions/database/:databaseID/group/:groupID',
+            params: {
+                databaseID: '@databaseID',
+                groupID: '@groupID'
+            }
+        },
+        updateGroup: {
+            method: 'PUT',
+            url: '/api/permissions/group/:id',
+            params: {
+                id: '@id'
+            }
+        },
+        deleteGroup: {
+            method: 'DELETE',
+            url: '/api/permissions/group/:id',
+            params: {
+                id: '@id'
+            }
+        },
+        schemaPermissions: {
+            method: 'GET',
+            url: '/api/permissions/database/:databaseID/group/:groupID/schema/:schema',
+            params: {
+                databaseID: '@databaseID',
+                groupID: '@groupID',
+                schema: '@schema'
+            }
+        },
+        createSchemaPermissions: {
+            method: 'POST',
+            url: '/api/permissions/database/:databaseID/group/:groupID/schema',
+            params: {
+                databaseID: '@databaseID',
+                groupID: '@groupID'
+            }
+        },
+        deleteSchemaPermissions: {
+            method: 'DELETE',
+            url: '/api/permissions/database/:databaseID/group/:groupID/schema/:schema',
+            params: {
+                databaseID: '@databaseID',
+                groupID: '@groupID',
+                schema: '@schema'
+            }
+        },
+        updateSchemaPermissions: {
+            method: 'PUT',
+            url: '/api/permissions/schema-permissions/:id',
+            params: {
+                id: '@id'
+            }
+        },
+        createTablePermissions: {
+            method: 'POST',
+            url: '/api/permissions/table-permissions'
+        },
+        deleteTablePermissions: {
+            method: 'DELETE',
+            url: '/api/permissions/table-permissions/:id',
+            params: {
+                id: '@id'
             }
         }
     });
