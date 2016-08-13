@@ -17,7 +17,7 @@
 ;;; ## DYNAMIC VARIABLES
 ;; These get bound by middleware for each HTTP request.
 
-(def ^:dynamic *current-user-id*
+(def ^:dynamic ^Integer *current-user-id*
   "Int ID or `nil` of user associated with current API call."
   nil)
 
@@ -25,6 +25,10 @@
   "Delay that returns the `User` (or nil) associated with the current API call.
    ex. `@*current-user*`"
   (atom nil)) ; default binding is just something that will return nil when dereferenced
+
+(def ^:dynamic ^Boolean *is-superuser?*
+  "Is the current user a superuser?"
+  false)
 
 
 ;;; ## CONDITIONAL RESPONSE FUNCTIONS / MACROS
@@ -64,7 +68,7 @@
 (defn check-superuser
   "Check that `*current-user*` is a superuser or throw a 403."
   []
-  (check-403 (db/exists? 'User, :id *current-user-id*, :is_superuser true)))
+  (check-403 *is-superuser?*))
 
 
 ;;; #### checkp- functions: as in "check param". These functions expect that you pass a symbol so they can throw exceptions w/ relevant error messages.
